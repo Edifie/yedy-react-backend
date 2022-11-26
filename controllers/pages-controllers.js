@@ -1,9 +1,8 @@
-const { v4: uuidv4 } = require('uuid'); //universally unique identifier generator
+const { v4: uuidv4 } = require("uuid"); //universally unique identifier generator
 
 const HttpError = require("../models/http-error");
 
-
-const PAGES = [
+let PAGES = [
   {
     id: "p1",
     name: "Webinar Butique",
@@ -13,9 +12,19 @@ const PAGES = [
     imageUrl: "https://i.ytimg.com/vi/U72Aoxuv5d8/maxresdefault.jpg",
     creator: "u1",
   },
+  {
+    id: "p2",
+    name: "Novo Butique",
+    tema: "Minimalist",
+    area: "Sell clothes",
+    type: "Responsive",
+    imageUrl: "https://i.ytimg.com/vi/U72Aoxuv5d8/maxresdefault.jpg",
+    creator: "u1",
+  },
+  
 ];
 
-// Get page by ID
+// Route to get page by ID
 const getPageById = (req, res, next) => {
   const pageId = req.params.pid; // {pid: 'p1}
   const page = PAGES.find((p) => {
@@ -30,21 +39,22 @@ const getPageById = (req, res, next) => {
   res.json({ page }); // { page } => { page: page }
 };
 
-// Get page by User
-const getPageByUser = (req, res, next) => {
+// Route to get page by User
+const getPagesByUser = (req, res, next) => {
   const userId = req.params.uid;
-  const page = PAGES.find((p) => {
+  const pages = PAGES.filter((p) => {
     return p.creator === userId;
   });
 
-  if (!page) {
+  if (!pages || pages.length === 0) {
     return next(
       new HttpError("Could not find a place for the provided user id.", 400)
     );
   }
-  res.json({ page });
+  res.json({ pages });
 };
 
+// Route to Create Page
 const createPage = (req, res, next) => {
   const { name, tema, type, area, creator } = req.body;
   // instead of doing -> const name = req.body.name for each of them use {}
@@ -63,6 +73,37 @@ const createPage = (req, res, next) => {
   res.status(201).json({ page: createdPage }); // 201 - sucessfully created in the server
 };
 
+// Route to update page by ID
+const updatePageById = (req, res, next) => {
+  //const stores the address of the object and not the object it self
+  const { name, tema, type, area } = req.body;
+  const pageId = req.params.pid;
+
+  const updatedPage = { ...PAGES.find((p) => p.id === pageId) };
+  const pageIndex = PAGES.findIndex((p) => p.id === pageId);
+
+  // applying if statement, won't lose the data if the user only wants to update one field instead of given all req.body
+    if (name) updatedPage.name = name;
+    if (type) updatedPage.type = type;
+  if (area) updatedPage.area = area;
+  if (tema) updatedPage.tema = tema;
+
+  // replace the old object at that index with the new updatedPage
+  PAGES[pageIndex] = updatedPage;
+
+  res.status(201).json({ page: updatedPage });
+};
+
+// Route to delete page by ID
+const deletePageById = (req, res, next) => {
+    const pageId = req.params.pid
+    // if we return true in that function, we keep that page in the newly returned array. if it false, drop it.
+    PAGES = PAGES.filter(p => p.id !== pageId)
+    res.status(200).json({ message: 'Deleted page!' })
+};
+
 exports.getPageById = getPageById;
-exports.getPageByUser = getPageByUser;
+exports.getPagesByUser = getPagesByUser;
 exports.createPage = createPage;
+exports.updatePageById = updatePageById;
+exports.deletePageById = deletePageById;
