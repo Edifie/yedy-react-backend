@@ -1,0 +1,16 @@
+-- API Endpoints --
+
+
+/api/users/..
+-> GET ../          - Retrieve list of all users
+-> POST ../signup   - Create a new user + log user in
+-> POST ../login    - Log user in
+
+
+/api/pages/..
+-> GET ../user/:uid - Retrieve list of all pages for a given user id(uid)
+-> GET ../:pid      - Get a specific page by page id (pid)
+-> POST ../         - Create a new page
+-> PATH ../:pid     - Update a page by id (pid)
+-> DELETE ../:pid   - Delete a page by id (pid)
+
