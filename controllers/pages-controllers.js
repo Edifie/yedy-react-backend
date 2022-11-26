@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid"); //universally unique identifier generator
+const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
 
@@ -21,7 +22,6 @@ let PAGES = [
     imageUrl: "https://i.ytimg.com/vi/U72Aoxuv5d8/maxresdefault.jpg",
     creator: "u1",
   },
-  
 ];
 
 // Route to get page by ID
@@ -56,6 +56,12 @@ const getPagesByUser = (req, res, next) => {
 
 // Route to Create Page
 const createPage = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    throw new HttpError("Invalid inputs passed, please check your data.", 422);
+  }
+
   const { name, tema, type, area, creator } = req.body;
   // instead of doing -> const name = req.body.name for each of them use {}
 
@@ -75,6 +81,12 @@ const createPage = (req, res, next) => {
 
 // Route to update page by ID
 const updatePageById = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    throw new HttpError("Invalid inputs passed, please check your data.", 422);
+  }
+
   //const stores the address of the object and not the object it self
   const { name, tema, type, area } = req.body;
   const pageId = req.params.pid;
@@ -83,8 +95,8 @@ const updatePageById = (req, res, next) => {
   const pageIndex = PAGES.findIndex((p) => p.id === pageId);
 
   // applying if statement, won't lose the data if the user only wants to update one field instead of given all req.body
-    if (name) updatedPage.name = name;
-    if (type) updatedPage.type = type;
+  if (name) updatedPage.name = name;
+  if (type) updatedPage.type = type;
   if (area) updatedPage.area = area;
   if (tema) updatedPage.tema = tema;
 
@@ -96,10 +108,14 @@ const updatePageById = (req, res, next) => {
 
 // Route to delete page by ID
 const deletePageById = (req, res, next) => {
-    const pageId = req.params.pid
-    // if we return true in that function, we keep that page in the newly returned array. if it false, drop it.
-    PAGES = PAGES.filter(p => p.id !== pageId)
-    res.status(200).json({ message: 'Deleted page!' })
+  const pageId = req.params.pid;
+
+  if(!PAGES.find(p=> p.id === pageId)){
+    throw new HttpError('Could not find a page with that ID!', 404)
+  }
+  // if we return true in that function, we keep that page in the newly returned array. if it false, drop it.
+  PAGES = PAGES.filter((p) => p.id !== pageId);
+  res.status(200).json({ message: "Deleted page!" });
 };
 
 exports.getPageById = getPageById;
