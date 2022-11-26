@@ -3,12 +3,18 @@ const bodyParser = require("body-parser");
 const port = process.env.PORT || 8080;
 
 const pagesRoutes = require("./routes/pages-route");
+const HttpError = require('./models/http-error')
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use("/api/pages", pagesRoutes); // => /api/pages/...
+
+// this middleware is only reached if we have some request which didn't get a response in the previous routes
+app.use((req,res,next) => {
+    throw new HttpError('Could not find this route.', 404)
+})
 
 // error handling middleware function
 app.use((error, req, res, next) => {
