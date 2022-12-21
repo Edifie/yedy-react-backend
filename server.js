@@ -7,6 +7,7 @@ const port = process.env.PORT || 8080;
 
 const pagesRoutes = require("./routes/pages-route");
 const usersRoutes = require("./routes/users-route");
+const templateRERoutes = require('./routes/templateRE-route')
 const HttpError = require("./models/http-error");
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(cors());
 
 app.use("/api/pages", pagesRoutes); // => /api/pages/...
 app.use("/api/users", usersRoutes); // => /api/users/...
+app.use("/api/RE", templateRERoutes); // => /api/RE/
 
 // this middleware is only reached if we have some request which didn't get a response in the previous routes
 app.use((req, res, next) => {
@@ -35,7 +37,7 @@ app.use((error, req, res, next) => {
 
 // connect to database
 mongoose
-  .connect("mongodb://localhost:27017/yedy-react")
+  .connect("mongodb://127.0.0.1:27017/yedy-react")
   .then(() =>
     app.listen(port, function () {
       console.log("Server --> Server is running on port " + port);
