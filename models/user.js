@@ -8,8 +8,9 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 6 },
   image: { type: String },
-  pages: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Page' }]
+  pages: [{ type: mongoose.Types.ObjectId, required: true, ref: "Page" }],
 });
+
 
 userSchema.plugin(uniqueValidator); // tird party library of mongoose to get the unique property and check if it is unique in the db
 

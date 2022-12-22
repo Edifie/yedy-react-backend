@@ -1,19 +1,30 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const cors = require('cors')
+const cors = require("cors");
 
 const port = process.env.PORT || 8080;
 
 const pagesRoutes = require("./routes/pages-route");
 const usersRoutes = require("./routes/users-route");
-const templateRERoutes = require('./routes/templateRE-route')
+const templateRERoutes = require("./routes/templateRE-route");
 const HttpError = require("./models/http-error");
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+
+  next();
+});
 
 app.use("/api/pages", pagesRoutes); // => /api/pages/...
 app.use("/api/users", usersRoutes); // => /api/users/...
@@ -43,6 +54,6 @@ mongoose
       console.log("Server --> Server is running on port " + port);
     })
   )
-  .catch(err => {
-    console.log(err)
+  .catch((err) => {
+    console.log(err);
   });
