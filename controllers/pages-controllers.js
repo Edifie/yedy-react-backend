@@ -41,25 +41,17 @@ const getPagesByUser = async (req, res, next) => {
   const userId = req.params.uid;
   let pages;
 
-  // difference between find() and findById() is that find() will return the all pages to specific userID and not the specific page.
-  // another reason that, also MongoDB uses find() as a cursor and iterates every object that it finds with the id.
   try {
-    pages = await Page.find({ creator: userId }); //returns an array
+    pages = await Page.find({ creator: userId });
   } catch (err) {
-    const error = new HttpError(
-      "Fetching pages failed. Please try again later.",
-      500
-    );
-    return next(error);
+    console.error(err);
+    return next(new HttpError("Could not find page for this ID", 404));
   }
 
   if (!pages || pages.length === 0) {
-    const error = new HttpError(
-      "Could not find a place for the provided user id.",
-      400
-    );
-    return next(error);
+    pages = [];
   }
+
   res.json({ pages: pages.map((page) => page.toObject({ getters: true })) });
 };
 
@@ -120,16 +112,7 @@ const createPage = async (req, res, next) => {
 /*********************************************** UPDATE PAGE ***********************************************/
 // PATCH http://localhost:8080/api/pages/:pid
 const updatePageById = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.log(errors);
-    return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422)
-    );
-  }
-
   //const stores the address of the object and not the object it self
-  const { name, tema, type, area } = req.body;
   const pageId = req.params.pid;
 
   try {
@@ -145,9 +128,8 @@ const updatePageById = async (req, res, next) => {
 
   // applying if statement, won't lose the data if the user only wants to update one field instead of given all req.body
   if (name) page.name = name;
-  if (type) page.type = type;
   if (area) page.area = area;
-  if (tema) page.tema = tema;
+  if (type) page.type = type;
 
   try {
     await page.save();
@@ -187,7 +169,7 @@ const deletePageById = async (req, res, next) => {
 
   try {
     await page.remove();
-    page.creator.pages.pull()
+    page.creator.pages.pull();
   } catch (err) {
     console.log("err", err);
     const error = new HttpError(
