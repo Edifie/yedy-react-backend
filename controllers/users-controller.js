@@ -5,6 +5,37 @@ const bcrypt = require("bcrypt");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 
+/*********************************************** GET USER BY ID ***********************************************/
+// GET http://localhost:8080/api/users/:uid
+const getUserById = async (req, res, next) => {
+  const userId = req.params.uid; // {uid: 'u1'}
+  let user;
+
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError(
+      // this error will display if our get request generally has some kind of a problem
+      "Something went wrong, could not find a user with that ID.",
+      500
+    );
+    return next(error);
+  }
+
+  // this error will display if the get request it's okay but don't have an id in the database
+  if (!user) {
+    // HttpError(messsage, status code)
+    const error = new HttpError(
+      "Could not find a user for the provided id.",
+      404
+    );
+    return next(error);
+  }
+
+  // to get rid of _id in the mongoDB
+  res.json({ user: user.toObject({ getters: true }) });
+};
+
 /*********************************************** GET ALL USERS ***********************************************/
 // GET http://localhost:8080/api/users/
 const getUsers = async (req, res, next) => {
@@ -172,3 +203,4 @@ const login = async (req, res, next) => {
 exports.login = login;
 exports.getUsers = getUsers;
 exports.signup = signup;
+exports.getUserById = getUserById
