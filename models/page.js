@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const pageSchema = new Schema({
   name: { type: String, required: true },
-  type: { type: String, required: true },
   area: { type: String, required: true },
   tema: { type: String, required: true },
   url: { type: String, required: true, unique: true, trim: true },

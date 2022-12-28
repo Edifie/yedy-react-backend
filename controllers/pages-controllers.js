@@ -92,7 +92,7 @@ const createPage = async (req, res, next) => {
     );
   }
 
-  const { name, tema, type, area, creator, url } = req.body;
+  const { name, tema, area, creator, url } = req.body;
   // instead of doing -> const name = req.body.name for each of them use {}
 
   const customUrl = slugify(url, { lower: true });
@@ -101,7 +101,6 @@ const createPage = async (req, res, next) => {
     name,
     area,
     tema,
-    type,
     url: customUrl,
     creator,
   });
