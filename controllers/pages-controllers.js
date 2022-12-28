@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const slugify = require("slugify");
 
 const HttpError = require("../models/http-error");
 const Page = require("../models/page");
@@ -25,7 +26,7 @@ const getPageById = async (req, res, next) => {
   if (!page) {
     // HttpError(messsage, status code)
     const error = new HttpError(
-      "Could not find a place for the provided id.",
+      "Could not find a page for the provided id.",
       404
     );
     return next(error);
@@ -55,6 +56,31 @@ const getPagesByUser = async (req, res, next) => {
   res.json({ pages: pages.map((page) => page.toObject({ getters: true })) });
 };
 
+/*********************************************** GET PAGE BY CUSTOM URL ***********************************************/
+// GET http://localhost:8080/api/pages/:customUrl
+const getCustomUrl = async (req, res, next) => {
+  const url = req.params.url;
+
+  let page;
+
+  try {
+    page = await Page.findOne({ url: url });
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not find a page with that URL.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!page) {
+    const error = new HttpError("Could not find a page for the provided URL.");
+    return next(error);
+  }
+
+  res.json({ page: page.toObject({ getters: true }) });
+};
+
 /*********************************************** CREATE PAGE ***********************************************/
 // POST http://localhost:8080/api/pages/
 const createPage = async (req, res, next) => {
@@ -66,14 +92,17 @@ const createPage = async (req, res, next) => {
     );
   }
 
-  const { name, tema, type, area, creator } = req.body;
+  const { name, tema, type, area, creator, url } = req.body;
   // instead of doing -> const name = req.body.name for each of them use {}
+
+  const customUrl = slugify(url, { lower: true });
 
   const createdPage = new Page({
     name,
     area,
     tema,
     type,
+    url: customUrl,
     creator,
   });
 
@@ -130,6 +159,7 @@ const updatePageById = async (req, res, next) => {
   if (name) page.name = name;
   if (area) page.area = area;
   if (type) page.type = type;
+  if (url) page.url = url;
 
   try {
     await page.save();
@@ -188,3 +218,4 @@ exports.getPagesByUser = getPagesByUser;
 exports.createPage = createPage;
 exports.updatePageById = updatePageById;
 exports.deletePageById = deletePageById;
+exports.getCustomUrl = getCustomUrl;

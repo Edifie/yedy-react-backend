@@ -7,6 +7,7 @@ const checkAuth = require("../middleware/check-auth");
 
 router.get("/:pid", pagesController.getPageById);
 router.get("/user/:uid", pagesController.getPagesByUser); //dynamic segment
+router.get("/DT/:url", pagesController.getCustomUrl)
 
 
 router.use(checkAuth); // Any route after this middleware, it will be secured

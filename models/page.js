@@ -6,7 +6,7 @@ const pageSchema = new Schema({
   type: { type: String, required: true },
   area: { type: String, required: true },
   tema: { type: String, required: true },
-  screenshot: { type: Buffer },
+  url: { type: String, required: true, unique: true, trim: true },
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
 });
 

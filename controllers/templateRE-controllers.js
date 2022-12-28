@@ -184,7 +184,40 @@ const updateTemplateById = async (req, res, next) => {
     });
 };
 
+const deleteTemplateById = async (req, res, next) => {
+  const templateId = req.params.tid;
+
+  let template;
+
+  try {
+    template = await TemplateRE.findById(templateId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete template.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!template) {
+    const error = new HttpError("Could find template for this ID.", 404);
+    return next(error);
+  }
+
+  try {
+    await template.remove();
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete the template.",
+      500
+    );
+    return next(error);
+  }
+  res.status(200).json({ message: "Deleted template!" });
+};
+
 exports.createAd = createAd;
 exports.getTemplatesByPageId = getTemplatesByPageId;
 exports.updateTemplateById = updateTemplateById;
 exports.getTemplateById = getTemplateById;
+exports.deleteTemplateById = deleteTemplateById;
