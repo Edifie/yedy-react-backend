@@ -7,16 +7,40 @@ Initially, in the interface, the website creator can choose in which area wants 
 
 In order to run the project,
 
-## Get the view folder.
+## Install node.js
 
-Can be downloaded in [here](https://github.com/Edifie/yedy-react).
+Can be downloaded in [here](https://nodejs.org/en/download/).
 
-## Install everything in the view
+Install the LTS version of Node to get both the **node** and **npm** commands in your command line.
+
+## Install dependencies of the project
+
+``npm install``
+
+This will install all of the dependencies that project depends on. Dependencies can be seen on **package.json** file. 
+
+## Install MongoDB
+
+Can be downloaded in [here](https://www.mongodb.com/try/download/community).
+
+## Install MongoDB Compass (GUI for MongoDB)
+
+Compass allows to explore and manipulate database in MongoDB. Can be downloaded in [here](https://www.mongodb.com/try/download/compass).
+
+To login to MongoDB write this URI for a new connection,
+
+``mongodb://localhost:27017``
+
+All of the data will be stored under the **yedy-react database**.
+
 
 ## npm start
 
 ``npm start`` runs the app in the development mode.
 
+## Get the view folder.
+
+Can be downloaded in [here](https://github.com/Edifie/yedy-react).
 
 
 
