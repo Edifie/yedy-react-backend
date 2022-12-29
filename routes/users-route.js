@@ -1,8 +1,11 @@
 const express = require("express");
 const { check } = require("express-validator");
+const multer = require("multer");
 
 const usersControllers = require("../controllers/users-controller");
+const store = require("../middleware/multer");
 const router = express.Router();
+
 
 router.get("/", usersControllers.getUsers);
 router.get("/:uid", usersControllers.getUserById);
@@ -21,5 +24,11 @@ router.post(
   usersControllers.signup
 );
 router.post("/login", usersControllers.login);
+
+router.patch(
+  "/:uid/profile-picture",
+  store.any(),
+  usersControllers.uploadImage
+);
 
 module.exports = router;
