@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
@@ -101,7 +102,7 @@ const signup = async (req, res, next) => {
     name,
     email,
     password: hashedPassword,
-    image,
+    images: [],
     pages: [],
   });
 
@@ -199,8 +200,57 @@ const login = async (req, res, next) => {
   });
 };
 
+/*********************************************** UPLOAD PICTURE ***********************************************/
+// PATCH http://localhost:8080/api/users/:uid/profile-picture
+
+const uploadImage = (req, res, next) => {
+  const userId = req.params.uid;
+  const files = req.files;
+
+  const { name, email, password } = req.body;
+
+
+  const updates = {};
+
+  if (email) {
+    updates.email = email;
+  }
+  if (password) {
+    updates.password = password;
+  }
+  if (name) {
+    updates.name = name;
+  }
+
+  console.log("updated object", updates);
+
+  if (files && files.length > 0) {
+    updates.images = [];
+
+    files.forEach((file, index) => {
+      let img = fs.readFileSync(file.path);
+      let encode_image = img.toString("base64");
+
+      updates.images.push({
+        filename: file.originalname,
+        contentType: file.mimetype,
+        imageBase64: encode_image,
+      });
+    });
+  }
+
+  User.findByIdAndUpdate(userId, updates)
+    .then(() => {
+      res.status(200).json({ message: "Template updated successfully!" });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
+};
+
 //Exports
 exports.login = login;
 exports.getUsers = getUsers;
 exports.signup = signup;
-exports.getUserById = getUserById
+exports.getUserById = getUserById;
+exports.uploadImage = uploadImage;

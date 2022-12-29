@@ -7,7 +7,20 @@ const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 6 },
-  image: { type: String },
+  images: [{
+    filename: {
+        type: String,
+        required: true
+    },
+    contentType: {
+        type: String,
+        required: true
+    },
+    imageBase64: {
+        type: String,
+        required: true
+    }
+}],
   pages: [{ type: mongoose.Types.ObjectId, required: true, ref: "Page" }],
 });
 
