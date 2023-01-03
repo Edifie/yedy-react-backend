@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const slugify = require("slugify");
+const fs = require("fs");
 
 const HttpError = require("../models/http-error");
 const Page = require("../models/page");
@@ -143,6 +144,8 @@ const updatePageById = async (req, res, next) => {
   //const stores the address of the object and not the object it self
   const pageId = req.params.pid;
 
+  const files = req.files;
+
   try {
     page = await Page.findById(pageId);
   } catch (err) {
@@ -155,22 +158,39 @@ const updatePageById = async (req, res, next) => {
   }
 
   // applying if statement, won't lose the data if the user only wants to update one field instead of given all req.body
-  if (name) page.name = name;
-  if (area) page.area = area;
-  if (type) page.type = type;
-  if (url) page.url = url;
 
-  try {
-    await page.save();
-  } catch (err) {
-    const error = new HttpError(
-      "Something went wrong, could not update page",
-      500
-    );
-    return next(error);
+  const { name, area, tema, type, url } = req.body;
+
+  const updates = {};
+
+  if (name) updates.name = name;
+  if (area) updates.area = area;
+  if (tema) updates.tema = tema;
+  if (type) updates.type = type;
+  if (url) updates.url = slugify(url, { lower: true });
+
+  if (files && files.length > 0) {
+    updates.images = [];
+
+    files.forEach((file, index) => {
+      let images = fs.readFileSync(file.path);
+      let encode_image = images.toString("base64");
+
+      updates.images.push({
+        filename: file.originalname,
+        contentType: file.mimetype,
+        imageBase64: encode_image,
+      });
+    });
   }
 
-  res.status(201).json({ page: page.toObject({ getters: true }) });
+  Page.findByIdAndUpdate(pageId, updates)
+    .then(() => {
+      res.status(200).json({ message: "Page updated successfully!" });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
 };
 
 /*********************************************** DELETE PAGE ***********************************************/

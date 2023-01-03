@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 
+
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 
@@ -65,7 +66,8 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password, image } = req.body;
+  const { name, email, password, location, phoneNumber } = req.body;
+
 
   // findOne() -> simply finds one document matching the criteria in the argument of our method.
   let existingUser;
@@ -102,6 +104,8 @@ const signup = async (req, res, next) => {
     name,
     email,
     password: hashedPassword,
+    location,
+    phoneNumber,
     images: [],
     pages: [],
   });
@@ -118,7 +122,7 @@ const signup = async (req, res, next) => {
     token = jwt.sign(
       { userId: createdUser.id, email: createdUser.email },
       "harry-potter",
-      { expiresIn: "1h" }
+      { expiresIn: "3h" }
     );
   } catch (err) {
     const error = new HttpError(
@@ -183,7 +187,7 @@ const login = async (req, res, next) => {
     token = jwt.sign(
       { userId: existingUser.id, email: existingUser.email },
       "supersecret_dont_share",
-      { expiresIn: "1h" }
+      { expiresIn: "3h" }
     );
   } catch (err) {
     const error = new HttpError(
@@ -207,8 +211,7 @@ const uploadImage = (req, res, next) => {
   const userId = req.params.uid;
   const files = req.files;
 
-  const { name, email, password } = req.body;
-
+  const { name, email, password, location, phoneNumber } = req.body;
 
   const updates = {};
 
@@ -220,6 +223,14 @@ const uploadImage = (req, res, next) => {
   }
   if (name) {
     updates.name = name;
+  }
+
+  if (location) {
+    updates.location = location;
+  }
+
+  if (phoneNumber) {
+    updates.phoneNumber = phoneNumber;
   }
 
   console.log("updated object", updates);
