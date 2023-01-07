@@ -22,22 +22,6 @@ const pageSchema = new Schema({
       },
     },
   ],
-  screenshot: [
-    {
-      filename: {
-        type: String,
-        required: true,
-      },
-      contentType: {
-        type: String,
-        required: true,
-      },
-      imageBase64: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
 });
 

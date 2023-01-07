@@ -184,6 +184,7 @@ const updateTemplateById = async (req, res, next) => {
     });
 };
 
+// DELETE http://localhost:8080/api/RE/template/:tid
 const deleteTemplateById = async (req, res, next) => {
   const templateId = req.params.tid;
 
