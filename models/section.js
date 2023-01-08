@@ -24,6 +24,22 @@ const sectionSchema = new Schema({
         type: String,
         required: false,
       },
+      images: [
+        {
+          filename: {
+            type: String,
+            required: false,
+          },
+          contentType: {
+            type: String,
+            required: false,
+          },
+          imageBase64: {
+            type: String,
+            required: false,
+          },
+        },
+      ],
     },
   ],
 

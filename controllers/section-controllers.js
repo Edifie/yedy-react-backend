@@ -4,6 +4,7 @@ const Section = require("../models/section");
 
 // POST http://localhost:8080/api/pages/:pid/aditional-section
 const createSection = (req, res, next) => {
+  const files = req.files;
   console.log(req.body); // log the request object
   console.log(req.body.pageId); // log the pageId field from the request body
 
@@ -29,13 +30,28 @@ const createSection = (req, res, next) => {
   };
 
   if (team) {
-    team.forEach((item) => {
+    for (let i = 0; i < team.length; i++) {
+      let file = files[i];
+      let item = team[i];
+      let img = fs.readFileSync(file.path);
+      let decode_image = img.toString("base64");
+
+      // create an array to store the decoded images
+      let decodedImages = [];
+
+      decodedImages.push({
+        filename: file.originalname,
+        contentType: file.mimetype,
+        imageBase64: decode_image,
+      });
+
       newSection.team.push({
         memberName: item.memberName,
         memberJobTitle: item.memberJobTitle,
         memberDescription: item.memberDescription,
+        images: decodedImages,
       });
-    });
+    }
   }
 
   // save the object to the collection
