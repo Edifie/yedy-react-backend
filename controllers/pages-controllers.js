@@ -135,7 +135,7 @@ const createPage = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ page: createdPage }); // 201 - sucessfully created in the server
+  res.status(201).json({ page: createdPage, pageId: createdPage.id }); // 201 - sucessfully created in the server
 };
 
 /*********************************************** UPDATE PAGE ***********************************************/

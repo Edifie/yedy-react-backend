@@ -24,9 +24,12 @@ router.post(
   store.any(),
   sectionController.createSection
 );
-router.get(
+router.get("/:pageId/aditional-section", sectionController.getSectionByPageId);
+
+router.patch(
   "/:pageId/aditional-section",
-  sectionController.getSectionByPageId
+  store.any(),
+  sectionController.updateSection
 );
 
 module.exports = router;
