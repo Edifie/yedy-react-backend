@@ -12,6 +12,7 @@ const sectionSchema = new Schema({
 
   team: [
     {
+      _id: { type: mongoose.Schema.Types.ObjectId },
       memberName: {
         type: String,
         required: false,

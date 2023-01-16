@@ -1,6 +1,7 @@
 const fs = require("fs");
 const HttpError = require("../models/http-error");
 const Section = require("../models/section");
+const mongoose = require("mongoose");
 
 // POST http://localhost:8080/api/pages/:pid/aditional-section
 const createSection = (req, res, next) => {
@@ -46,6 +47,7 @@ const createSection = (req, res, next) => {
           imageBase64: decode_image,
         });
         newSection.team.push({
+          _id: new mongoose.Types.ObjectId(),
           memberName: item.memberName,
           memberJobTitle: item.memberJobTitle,
           memberDescription: item.memberDescription,
@@ -121,39 +123,37 @@ const updateSection = async (req, res, next) => {
 
   if (team) {
     let teamPromises = []; //create an empty array to store promises for updating or creating team members
-    team.forEach((item, i) => { // item -> current team member being processed, i-> index in the array
-      let decodedImages = [];
-      if (files[i]) {
+    // updates.team.images = [];
+
+    team.forEach((item, i) => {
+      // item -> current team member being processed, i-> index in the array
+      let teamMember = {
+        _id: item._id,
+        memberName: item.memberName,
+        memberJobTitle: item.memberJobTitle,
+        memberDescription: item.memberDescription,
+      };
+
+      if (files && files[i]) {
         let file = files[i];
         let img = fs.readFileSync(file.path);
         let decode_image = img.toString("base64");
 
-        decodedImages.push({
-          filename: file.originalname,
-          contentType: file.mimetype,
-          imageBase64: decode_image,
-        });
+        teamMember.images = [
+          {
+            filename: file.originalname,
+            contentType: file.mimetype,
+            imageBase64: decode_image,
+          },
+        ];
       }
-      let teamMember = {
-        memberName: item.memberName,
-        memberJobTitle: item.memberJobTitle,
-        memberDescription: item.memberDescription,
-        images: decodedImages,
-      };
-      if (item._id) {
-        //update existing team member
-        teamPromises.push(
-          Section.findByIdAndUpdate(
-            item._id,
-            { $set: teamMember },
-            { new: true }
-          )
-        );
-      } else {
-        //create new team member
-        let newTeamMember = new Section(teamMember);
-        teamPromises.push(newTeamMember.save());
-      }
+      teamPromises.push(
+        Section.updateOne(
+          { pageId: pageId, "team._id": item._id },
+          { $set: { "team.$": teamMember } },
+          { new: false }
+        )
+      );
     });
 
     Promise.all(teamPromises)
@@ -165,13 +165,9 @@ const updateSection = async (req, res, next) => {
       });
   } else {
     //update other fields if no team member provided
-    Section.findOneAndUpdate({ pageId: pageId }, updates)
-      .then(() => {
-        res.status(200).json({ message: "Section updated successfully!" });
-      })
-      .catch((error) => {
-        res.status(500).json({ error: error.message });
-      });
+    Section.findOneAndUpdate({ pageId: pageId }, updates).then(() => {
+      res.status(200).json({ message: "Section updated successfully!" });
+    });
   }
 };
 
