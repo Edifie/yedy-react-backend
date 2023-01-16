@@ -32,4 +32,6 @@ router.patch(
   sectionController.updateSection
 );
 
+router.delete("/:sectionId/team/:teamId", sectionController.deleteTeamMember);
+
 module.exports = router;
