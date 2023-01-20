@@ -8,6 +8,8 @@ const templateSCSchema = new Schema({
   color: { type: String, required: false },
   details: { type: String, required: false },
   material: { type: String, required: false },
+  adTitle: { type: String, required: false },
+  brand: { type: String, required: false },
   images: [
     {
       filename: {

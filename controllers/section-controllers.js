@@ -198,7 +198,7 @@ const updateSection = async (req, res, next) => {
 
     Promise.all(teamPromises)
       .then((result) => {
-        res.status(200).json({ message: "Section updated successfully!" });
+        res.status(200).json({ message: "Team updated successfully!" });
       })
       .catch((error) => {
         res.status(500).json({ error: error.message });
@@ -209,6 +209,7 @@ const updateSection = async (req, res, next) => {
       res.status(200).json({ message: "Section updated successfully!" });
     });
   }
+  console.log(req.body);
 };
 
 // DELETE http://localhost:8080/api/pages/:sectionId/team/:teamMemberId
