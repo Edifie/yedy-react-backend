@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const templateSCSchema = new Schema({
-  price: { type: Number, required: false },
-  category: { type: String, required: false },
-  size: { type: String, required: false },
-  color: { type: String, required: false },
-  details: { type: String, required: false },
-  material: { type: String, required: false },
-  adTitle: { type: String, required: false },
-  brand: { type: String, required: false },
+  price: { type: Number, required: true },
+  category: { type: String, required: true },
+  size: { type: String, required: true },
+  color: { type: String, required: true },
+  details: { type: String, required: true },
+  material: { type: String, required: true },
+  adTitle: { type: String, required: true },
+  brand: { type: String, required: true },
   images: [
     {
       filename: {

@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const templateMSSchema = new Schema({
+const templateBSSchema = new Schema({
   price: { type: Number, required: true },
   category: { type: String, required: true },
   subCategory: { type: String, required: true },
-  brand: { type: String, required: true },
-  adTitle: { type: String, required: true },
   description: { type: String, required: true },
+  adTitle: { type: String, required: true },
+  writer: { type: String, required: true },
+  language: { type: String, required: true },
+  publisher: { type: String, required: true },
+  numberOfPage: { type: Number, required: true },
+  printYear: { type: Number, required: true },
   images: [
     {
       filename: {
@@ -27,4 +31,4 @@ const templateMSSchema = new Schema({
   pageId: { type: mongoose.Types.ObjectId, required: true, ref: "Page" },
 });
 
-module.exports = mongoose.model("TemplateMS", templateMSSchema);
+module.exports = mongoose.model("TemplateBS", templateBSSchema);

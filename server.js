@@ -7,9 +7,16 @@ const port = process.env.PORT || 8080;
 
 const pagesRoutes = require("./routes/pages-route");
 const usersRoutes = require("./routes/users-route");
+
+// Real Estate
 const templateRERoutes = require("./routes/templateRE-route");
+// Sell Clothes
 const templateSCRoutes = require("./routes/templateSC-route");
+// Music Store
 const templateMSRoutes = require("./routes/templateMS-route");
+// Book Store
+const templateBSRoutes = require("./routes/templateBS-route");
+
 const HttpError = require("./models/http-error");
 
 const app = express();
@@ -27,9 +34,9 @@ app.use(cors());
 app.use("/api/pages", cors(), pagesRoutes); // => /api/pages/...
 app.use("/api/users", usersRoutes); // => /api/users/...
 app.use("/api/RE", templateRERoutes); // => /api/RE/
-app.use("/api/SC", templateSCRoutes); // => /api/RE/
-
-app.use("/api/MS", templateMSRoutes); // => /api/RE/
+app.use("/api/SC", templateSCRoutes); // => /api/SC/
+app.use("/api/MS", templateMSRoutes); // => /api/MS/
+app.use("/api/BS", templateBSRoutes); // => /api/BS/
 
 // this middleware is only reached if we have some request which didn't get a response in the previous routes
 app.use((req, res, next) => {

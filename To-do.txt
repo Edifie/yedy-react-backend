@@ -14,3 +14,4 @@
 -> PATH ../:pid     - Update a page by id (pid)
 -> DELETE ../:pid   - Delete a page by id (pid)
 
+book store
