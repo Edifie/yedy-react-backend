@@ -16,6 +16,8 @@ const templateSCRoutes = require("./routes/templateSC-route");
 const templateMSRoutes = require("./routes/templateMS-route");
 // Book Store
 const templateBSRoutes = require("./routes/templateBS-route");
+// Jewellery Store
+const templateJSRoutes = require("./routes/templateJS-route");
 
 const HttpError = require("./models/http-error");
 
@@ -37,6 +39,7 @@ app.use("/api/RE", templateRERoutes); // => /api/RE/
 app.use("/api/SC", templateSCRoutes); // => /api/SC/
 app.use("/api/MS", templateMSRoutes); // => /api/MS/
 app.use("/api/BS", templateBSRoutes); // => /api/BS/
+app.use("/api/JS", templateJSRoutes); // => /api/BS/
 
 // this middleware is only reached if we have some request which didn't get a response in the previous routes
 app.use((req, res, next) => {
