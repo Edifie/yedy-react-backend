@@ -1,9 +1,12 @@
 # Yedy
 
-This is the server folder of Yedy.
+### This is the server folder of Yedy.
 
-In this project, a website will be developed with MERN stack in order to allow business owners to create a website in an easier way.
-Initially, in the interface, the website creator can choose in which area wants to create it, and with the pre-made layouts, the database will be able to easily detect the necessary fields. Finally, just need to fill in the necessary fields to create the site.
+The project aims to create a web application using MERN stack for local and small business owners to create their own websites without needing any computer knowledge.
+
+The template builder allows users to create websites easily by giving five specific areas: Real Estate, Sell Clothes, Book Store, Music Store, and Jewelry Store. Users can upload images and information about their advertisements/products such as house images, clothing items, musical instruments, books, or jewelry. Users can also change the design of the website from a given three theme choices which are Boho, Minimalist, and Autumnal. The application also enables to add sections to their pages such as About Us, Team, and Welcome sections to display specific information to customers. It also allows sharing the page with potential customers with a custom URL to display existing products.
+
+The main objective of this project is to provide a user-friendly and efficient solution for small and local business owners to create and customize their own websites without the need for technical skills.
 
 In order to run the project,
 
