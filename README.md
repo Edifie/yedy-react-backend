@@ -36,6 +36,9 @@ To login to MongoDB write this URI for a new connection,
 
 All of the data will be stored under the **yedy-react database**.
 
+## Create a folder named ``uploads`` in the source folder
+
+In order to keep the uploaded photos on the server, create a folder called **uploads**. If this folder is not created, the application will throw an error when trying upload images of the products.
 
 ## npm start
 
